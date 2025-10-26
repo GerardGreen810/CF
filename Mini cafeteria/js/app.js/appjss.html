@@ -1,0 +1,118 @@
+const formPedido = document.getElementById("form-pedido");
+const msgResultado = document.getElementById("msg-resultado");
+
+if (formPedido) {
+  formPedido.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const nombre = document.getElementById("inp-nombre").value.trim();
+    const email = document.getElementById("inp-email").value.trim();
+    const producto = document.getElementById("sel-producto").value;
+
+    if (!nombre || !email || !producto) {
+      msgResultado.textContent = "Por favor, complete todos los campos.";
+      return;
+    }
+
+    msgResultado.textContent = `Gracias ${nombre} por su pedido de ${producto}. Nos pondremos en contacto con usted a través del correo ${email}.`;
+  });
+}
+
+
+function limpiarErrores(){
+  const ids=["err-nombre","err-email","err-producto"];
+  ids.forEach(id=>{
+    const elem=document.getElementById(id);
+    if(elem){
+      elem.textContent="";
+    }
+  });
+}
+
+if (formPedido) {
+  formPedido.addEventListener("submit", function (event) {
+    event.preventDefault();
+    limpiarErrores();
+
+    const nombre = document.getElementById("inp-nombre");
+    const email = document.getElementById("inp-email");
+    const producto = document.getElementById("sel-producto");
+
+    let valido = true;
+
+    if (!nombre.value.trim()) {
+      document.getElementById("err-nombre").textContent = "Escribe tu nombre.";
+      valido = false; // ← en lugar de volver a declarar "let"
+    }
+
+  }); // ← cierra el addEventListener
+} // ← cierra el if principal
+
+if (!nombre.value.trim()) {
+  document.getElementById("err-nombre").textContent = "Escribe tu nombre.";
+  valido = false;
+  
+    }
+    if(!email.value.trim() || !email.value.includes("@")){
+      document.getElementById("err-email").textContent="Escribe un email valido."
+      valido=false;
+    }
+    if(!producto.value){
+      document.getElementById("err-producto").textContent="Selecciona un producto."
+      valido=false;
+    }
+    if(!valido){
+      return;
+    }
+    msgResultado.textContent=`Gracias ${nombre.value} por su pedido de ${producto.value}. Nos pondremos en contacto con usted a través del correo ${email.value}.`;
+  
+
+ ["inp-nombre","err-nombre"],["inp-email","err-email"],["sel-producto","err-producto"]]
+.forEach(([fieldId, errId]) => {
+  const field = document.getElementById(fieldId);
+  if (!field) return;
+  field.addEventListener("input", () => {
+    const err = document.getElementById(errId);
+    if (err && err.textContent) err.textContent = "";
+  });
+
+  const PRECIOS={ americano :25,  latte:38, "pastel-chocolate":40, "galletas-caseras":20 };
+  const EXTRAS={ leche:5, jarabe:5, extraShot:5
+
+  };
+  const money =(n) => n.toLocaleString("es-MX",{style:"currency",currency:"MXN"});
+
+  function calcularTotal(){
+    let total= PRECIOS [producto] || 0;
+    for (const x of extras){
+      total += EXTRAS[x] || 0;
+    }
+    return total;
+  }
+
+  const formPedido = document.getElementById("form-pedido");
+  const msgResultado = document.getElementById("msg-resultado");
+  const selProducto = document.getElementById("sel-producto");
+
+  if (formPedido) 
+    formPedido.addEventListener("submit", (event) => {
+      event.preventDefault();
+      
+      if (!selProducto.value){
+        document.getElementById("err-producto").textContent="Selecciona un producto.";
+        return;
+      }
+      const extrasSel= Array.from(document.querySelectorAll(".extra:checked")).map(el => el.value);
+      const total= calcularTotal(selProducto.value, extrasSel);
+      const extrasTx= extrasSel.length ? extrasSel.join(", ") : "Sin extras";
+      msgResultado.textContent=`Producto: ${selProducto.value} | Extras: $(extrasTx) |Total:
+      ${money(total)}`; 
+
+    
+  
+
+});
+
+    
+       
+    

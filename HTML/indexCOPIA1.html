@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Prueba</title>
+  <style>
+    canvas {
+      background: url("img/Fondo-prueba1.jpg") no-repeat center center;
+      background-size: cover;
+      display: block;
+      margin: auto;
+    }
+    #mensaje {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px black;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="juego" width="800" height="400"></canvas>
+  <div id="mensaje">Presiona "E" para entrar</div>
+
+  <script>
+    const canvas = document.getElementById("juego");
+    const ctx = canvas.getContext("2d");
+
+    // Imagen del personaje (puedes cambiarla por la tuya)
+    const personaje = {
+      x: 50,
+      y: 300,
+      ancho: 40,
+      alto: 60,
+      velocidad: 5
+    };
+
+    let fondoActual = "img/Fondo-prueba1.jpg";
+    let teclas = {};
+    const puertaX = 720; // posición de la puerta en el extremo derecho
+    const rangoInteraccion = 50;
+    const mensaje = document.getElementById("mensaje");
+
+    // Eventos de teclado
+    document.addEventListener("keydown", (e) => teclas[e.key] = true);
+    document.addEventListener("keyup", (e) => teclas[e.key] = false);
+
+    function actualizar() {
+      // Movimiento izquierda
+      if (teclas["a"]) personaje.x -= personaje.velocidad;
+      // Movimiento derecha
+      if (teclas["d"]) personaje.x += personaje.velocidad;
+
+      // Mantener dentro de los límites
+      if (personaje.x < 0) personaje.x = 0;
+      if (personaje.x + personaje.ancho > canvas.width)
+        personaje.x = canvas.width - personaje.ancho;
+
+      // Mostrar mensaje si está cerca de la puerta
+      if (Math.abs(personaje.x - puertaX) < rangoInteraccion) {
+        mensaje.style.display = "block";
+        // Detectar interacción con "e"
+        if (teclas["e"]) {
+          cambiarEscenario();
+        }
+      } else {
+        mensaje.style.display = "none";
+      }
+    }
+
+    function dibujar() {
+      // Fondo
+      canvas.style.backgroundImage = `url('${fondoActual}')`;
+
+      // Personaje
+      ctx.fillStyle = "blue";
+      ctx.fillRect(personaje.x, personaje.y, personaje.ancho, personaje.alto);
+
+      // Puerta
+      ctx.fillStyle = "green";
+      ctx.fillRect(puertaX, 280, 50, 100);
+    }
+
+    function bucle() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      actualizar();
+      dibujar();
+      requestAnimationFrame(bucle);
+    }
+
+    function cambiarEscenario() {
+      if (fondoActual === "img/Fondo-prueba1.jpg") {
+        fondoActual = "img/Fondo-prueba2.jpg";
+        personaje.x = 50; // reiniciar posición al entrar
+      } else {
+        fondoActual = "img/Fondo-prueba1.jpg";
+        personaje.x = 50;
+      }
+    }
+
+    bucle();
+  </script>
+</body>
+</html>

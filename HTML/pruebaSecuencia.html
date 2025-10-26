@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Novela Visual</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        #texto {
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+        #boton {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+        }
+        #boton:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="texto">Cargando escena...</div>
+    <button id="boton">Siguiente</button>
+
+    <script>
+        let escenaActual = 1;
+
+        function cargarEscena(id) {
+            fetch(`getEscena.php?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.fondo) {
+                        document.body.style.backgroundImage = `url(/novela/img/${data.fondo})`;
+                        document.getElementById("texto").innerText = data.texto;
+                    } else {
+                        document.getElementById("texto").innerText = data.texto;
+                        document.getElementById("boton").style.display = "none"; // ocultar botón al final
+                    }
+                });
+        }
+
+        document.getElementById("boton").addEventListener("click", () => {
+            escenaActual++;
+            cargarEscena(escenaActual);
+        });
+
+        // cargar la primera escena al inicio
+        cargarEscena(escenaActual);
+    </script>
+
+</body>
+</html>

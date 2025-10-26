@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coathli's Faith</title>
+  <style>
+
+    /*Estilo general - Inicio 1 ... ESTADO: PRUEBA*/
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    /*Diseño para video de fondo - Inicio 1*/
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /*Menú de Inicio 1*/
+    #menuInicio1 {
+      text-align: center;
+      color: white;
+      z-index: 1;
+    }
+
+    /*Botones de menú - Inicio 1*/
+    button {
+      display: block;
+      margin: 15px auto;
+      padding: 12px 30px;
+      font-size: 20px;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid white;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    /*Botones de menú - Efecto al pasar el mouse*/
+    button:hover:not(.inactivo) {
+      background: white;
+      color: black;
+    }
+
+    button.inactivo {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /*Transición desvanecida negra*/
+    #transicionInicio {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      z-index: 5;
+      transition: opacity 1s;
+      pointer-events: none;
+    }
+
+    /*Cinemática inicial del juego*/
+    #cinematica1 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 4;
+      display: none;
+    }
+
+    /* Botón Volver - Volver a pantalla de Inicio 1 */
+    .boton-volver {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Video pre-reposo - Fondo para inicio default de la pantlla de inicio 1-->
+  <video id="backgroundVideoInicio1" autoplay muted loop>
+    <!-- Video de prueba para revisar funcionamiento del sistema-->
+    <source src="videos/candles-on-loop.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+
+  <!--  Transición simple con pantalla negra desvanecida-->
+  <div id="transicionInicio"></div>
+
+  <!-- Menú de Inicio 1-->
+  <div id="menuInicio1">
+    <!-- Botón para el inicio del juego -->
+    <button onclick="jugar()">Jugar</button>
+    <!-- Botón para los créditos del juego -->
+    <button onclick="creditos()">Créditos</button>
+    <!-- Botón para el salir del juego - PENDIENTE -->
+    <button onclick="salir()">Salir</button>
+  </div>
+
+  <!-- Cinemática de inicio - Cinématica obligatoria -->
+  <video id="cinematica1" autoplay>
+    <source src="videos/cinematica-inicio.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+
+  <script>
+    const videoFondo = document.getElementById("backgroundVideoInicio1");
+    const transicion = document.getElementById("transicionInicio");
+    const cinematica = document.getElementById("cinematica1");
+    const menu = document.getElementById("menuInicio1");
+
+    let estado = "on"; //Estado actual: "on", "transition", "off"
+
+    //Después de 10 segundos, inicia la transición de las velas a post-reposo
+    setTimeout(() => {
+      if (estado === "on") {
+        estado = "transition";
+        video.loop = false; //No se repite la transición, reproducción única
+        //Video de prueba para revisar funcionamiento del sistema
+        video.src = "videos/candles-off-transition.mp4"; //Ubicación - video de transición
+        video.play(); //Reproducir video
+
+        //Cuando termine la transición pasará al loop post-reposo
+        video.onended = () => {
+          if (estado === "transition") {
+            estado = "off";
+            video.loop = true;
+            //Video de prueba para revisar funcionamiento del sistema
+            video.src = "videos/candles-off-loop.mp4"; //Ubicación - video post-reposo
+            video.play(); //Reproducir video
+          }
+        };
+      }
+    }, 10000); // 10 segundos de espera antes de apagar velas - jugador no da inicio "jugar"
+
+
+    //Botones del menú - Inicio 1
+
+    //Botón para el inicio del juego - PENDIENTE
+    
+    function jugar() {
+      transicion.style.opacity = "1"; //Hace visible la transición
+      menu.style.display = "none"; //Menú de Inicio 1 - No visible
+
+      setTimeout(() => {
+        transicion.style.opacity = "0";
+        cinematica.style.display = "block";
+        cinematica.play(); //Reproducir transición
+
+        //Guardar partida en la base de datos
+        fetch("guardar_partida.php", { method: "POST" });
+
+        cinematica.onended = () => {
+          alert("Cinemática terminada. Iniciando juego...");
+          //Cinématica terminada - Iniciando juego
+        };
+
+      }, 1500); // duración de 2 segundos para la transición
+    }
+
+
+    //BOTONES DE MENÚ - INICIO
+
+    //Botón para los créditos del juego - PENDIENTE
+    function creditos() {
+      alert("Pantalla de Créditos pendientes");
+    }
+
+    //Botón para el salir del juego - PENDIENTE
+    function salir() {
+      alert("Juego cerrado (simulación, en navegador no se puede cerrar)");
+    }
+
+    //Eliminar datos de partida - EN PRUEBA
+    function reiniciarPartida() {
+      fetch("reiniciar_partida.php", { method: "POST" })
+        .then(res => res.text())
+        .then(msg => alert(msg));
+    }
+
+    //Comprobar si hay partida guardada - EN PRUEBA
+    fetch("estado_partida.php")
+      .then(res => res.json())
+      .then(data => {
+        if (data.estado === "iniciada") {
+          console.log("Partida guardada detectada.");
+        } else {
+          console.log("No hay partida guardada.");
+        }
+      });
+  </script>
+
+</body>
+</html>

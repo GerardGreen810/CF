@@ -1,0 +1,84 @@
+/* styles.css-Semana 2 Dia 1: estilos base*/
+:root {--bg: #fffaf3; --ink: #2b2b2b; --brand: #8b5e34}
+
+*{box-sizing: border-box;}
+ body {
+     margin: 0;
+     font-family: arial, sans-serif;
+     background: var(--ink);
+     padding: 16px;
+ }
+h1,h2,h3 {margin-top: 0.6em; margin-bottom: 0.3em;}
+p,li {line-height: 1.5;}
+
+nav a {color: var(--brand); text-decoration: none; margin-right: 8px;}
+nav a:hover {text-decoration: underline;}
+
+.grid-2 {display:grid; grid-template-columns: 1fr 1fr; gap: 12px;}
+@media (max-width:700px){.grid-2{grid-template-columns: 1fr;}}
+
+.card{
+    background: #ffffff;
+    border: 1px solid #eadfce;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 1px 2px rgba(red, green, blue, alpha);
+}
+
+.card img{width: 100%;height: auto; border-radius: 8px; display: block;}
+.card h4{ margin: 8px 0 4px ;}
+.card p {margin: 0;}
+
+.tabla-precios {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 12px 0 20px;
+ background:#fff ;
+ border: 1px solid #eadfce;
+ border-radius: 8px;
+
+}
+
+.tabla-precios th, .tabla-precios td{
+    padding: 10px;
+    border-bottom: 1px solid #efeadf;
+    text-align: left;
+}
+
+.tabla-precios thead th {background: #f7efe4;}
+
+
+.promo {
+    background: #fff3e6;
+    border: 1px solid #ffd7b5;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0 24px;
+    text-align: center;
+
+}
+
+.btn-ordenar {
+    display: inline-block;
+    margin-top: 8px;
+    background: #8d6e63;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/*Responsive minimo*/
+@media (max-width:700px) {
+    body {padding: 12px;}
+    nav {font-size: 0.95rem;}
+    h1 {font-size: 1.6rem;}
+    h2 {font-size: 1.2 rem;}
+     .promo {padding: 12px;}
+     .btn-ordenar {padding: 10px 14px;    }     
+}
+
+.err {
+  color: #b00020;
+  font-size: 0.9rem;
+     }

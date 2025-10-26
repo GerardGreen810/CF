@@ -1,0 +1,221 @@
+<!-- Arriba DOCTYPE indica que utilizamos html moderno (html5). -->
+<html lang="es">
+
+<!-- <html> abre el documento. lang="es" dice que el idioma es español. -->
+<head>
+  <!-- <head> contiene datos para el navegador (no visibles como contenido principal). -->
+  <meta charset="UTF-8">
+  <!-- meta charset: indica que utilizaremos caracteres en español correctamente. -->
+  <meta name="viewport" content="width=device-width , inicial-scale=1">
+  <!-- Esto hace que la pagina se vea bien en celulares (sin zoom raro) -->
+  <title>Mi Cafeteria - Pagina princial</title>
+  <!-- Title es el texto que se vera en la pestaña del navegador -->
+  <link rel="stylesheet" href="css/styles.css/styless.css">
+</head>
+
+<body>
+  <!--body contiene lo que la gente vera en la pagina -->
+
+  <!-- Titulo principal de la pagina-->
+  <h1>Mini Cafeteria Online</h1>
+
+  <!-- Navegacion interna con anclas: al hacer clic, salta a la seccion-->
+  <nav>
+    <a href="#bienvenida">Inicio</a>
+    <a href="#menu">Menu</a>
+    <a href="#postres"></a>
+    <a href="#bebidas">Bebidas</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
+  <!-- Seccion de bienvenida -->
+  <section id="bienvenida">
+    <h2>Bienvenido</h2>
+    <p>Esta es la pagina de la cafeteria. Aqui veras nuestro menu y podras contactarnos</p>
+  </section>
+
+  <!--Seccion menu: hoy solo crearemos las cajas con encabezados -->
+  <section id="menu">
+    <h2>Menu</h2>
+
+    <!-- subseccion de bebidas-->
+    <article id="bebidas">
+      <h3>Bebidas</h3>
+
+      <div class="grid-2">
+        <div class="card">
+          <!-- Galeria minima de bebidas con descripcion-->
+          <figure>
+            <!-- src apunta a la ruta del archivo. alt describe la imagen para lectores de pantalla o si-->
+            <img src="assets/img/A_small_cup_of_coffee.JPG" alt="Taza de cafe americano caliente" width="220">
+            <figcaption>Cafe Americano</figcaption>
+            <p>Sencillo e inteso</p>
+          </figure>
+        </div>
+
+        <div class="card">
+          <figure>
+            <img src="assets/img/Caffe_Latte_at_Pulse_Cafe.jpg" alt="Vase de latte con arte de leche" width="220">
+            <figcaption>Latte</figcaption>
+            <p>Suave y cremoso</p>
+          </figure>
+        </div>
+      </div>
+
+      <!-- lista con viñetas de bebidas-->
+      <ul>
+        <li>Cafe Americano</li>
+        <li>Espresso</li>
+        <li>Capuchinos</li>
+        <li>Latte</li>
+        <li>Frappe de vainilla</li>
+      </ul>
+    </article>
+
+    <!-- subseccion de postres-->
+    <article id="postres">
+      <h3>Postres</h3>
+
+      <div class="grid-2">
+        <div class="card">
+          <figure>
+            <img src="assets/img/images.jpeg" alt="Rebanada de pastel" width="220">
+            <h4>Pastel de chocolate</h4>
+            <p>Clasico y casero</p>
+          </figure>
+        </div>
+
+        <div class="card">
+          <figure>
+            <img src="assets/img/546910e19c08ec91b3345de4f718e09a_Original_NTH_Chocolate_Chip_Cookie_1080_850.jpg"
+              alt="Galletas caseras" width="220">
+            <figcaption>Galletas caseras</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- lista con viñetas de postres-->
+      <ul>
+        <li>Pastel de chocolate</li>
+        <li>Pay de queso</li>
+        <li>Galletas caseras</li>
+        <li>Brownies</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="promo" id="promo">
+    <h2>Promocion de la semana</h2>
+    <p>Combo latte + Galletas caseras</p>
+    <p><strong>$60</strong></p>
+    <a class="btn-ordenar" href="#contacto">Ordenar ahora</a>
+  </section>
+
+  <section id="precios">
+    <h2>Precios</h2>
+    <table class="tabla-precios">
+      <thead>
+        <tr>
+          <th>Productos</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cafe Americano</td>
+          <td>$25</td>
+        </tr>
+        <tr>
+          <td>Espresso</td>
+          <td>$30</td>
+        </tr>
+        <tr>
+          <td>Latte</td>
+          <td>$38</td>
+        </tr>
+        <tr>
+          <td>Pastel de chocolate (rebanada)</td>
+          <td>$25</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Seccion de contacto -->
+  <section id="contacto">
+    <h2>Contacto</h2>
+    <p>Direccion: Calle principal 123, Col. Centro</p>
+    <!-- Enlace externo, abre Goggle maps en una nueva pestaña-->
+    <p>
+      <a href="https://www.google.com/maps" target="_blank">Ver en google maps</a>
+    </p>
+    <p>Telefono: 000 000-0000</p>
+
+    <form id="form-pedido">
+      <label>
+        Nombre:
+        <input id=""inp-nombre" type="text" required>
+        <small id="err nombre class="err"></small>
+      </label>
+      <br>
+      <label>
+        Email:
+        <input id=""inp-nombre" type="text" required>
+        <small id="err email" class="err"></small>
+      </label>
+      <br>
+      <label>
+        Producto:
+        <select id=" "sel-producto" required>
+          <option value="">--Seleccione--</option>
+          <option value="cafe-americano">Cafe Americano</option>
+          <option value="espresso">Espresso</option>
+          <option value="latte">Latte</option>
+          <option value="pastel-chocolate">Pastel de chocolate</option>
+          <option value="galletas-caseras">Galletas caseras</option>
+        </select>
+        <small id="err producto" class="err"></small>
+      </label>
+      <br>
+      <button type="submit">Enviar pedido</button>
+    <fieldset>
+      <legend>Extras</legend>
+      <label>
+        <input type="checkbox" class="extra" value="leche"> Leche deslactosada (+ $5) </label><br>
+          <input type="checkbox" class="extra" value="jarabe"> Jarabe de vainilla (+ $5) </label><br>
+          <input type="checkbox" class="extra" value="extraShot"> Shot extra de espresso (+ $5) </label><br>
+    </fieldset>
+    <button type="submit">Enviar pedido</button>
+    </form>
+
+    <p id=""msg-resultado"></p>
+  </section>
+
+  <script src=""js/app.js"></script>
+
+    <form id="form-pedido" novalidate>
+        <label>Producto:
+            <select id="sel-producto" required>
+                <option value="">Selecciona...  </option>
+                  <option value="americano">Americano ($25)</option>
+                  <option value="espresso">Espresso ($30)</option>
+                  <option value="latte">Latte ($38)</option>
+                  <option value="pastel-chocolate">Pastel de chocolate ($25)</option>
+                  <option value="galletas-caseras">Galletas caseras ($20)</option>
+            </select>
+            <small id="err-producto" class="err"></small>
+        </label>
+
+          <fieldset>
+              <legend>Extras</legend>
+                <label>  <input type ="checkbox" class="extra" value="leche"> Leche deslactosada (+ $5) </label><br>
+                <label>  <input type ="checkbox" class="extra" value="jarabe"> Jarabe de vainilla (+ $5) </label><br>
+                <label>  <input type ="checkbox" class="extra" value="extraShot"> Shot extra de espresso (+ $5) </label><br>
+          </fieldset>
+
+          <button type="submit">Calcular total</button>
+        </form>
+          <p id="msg-resultado" aria-live="polite"></p>
+</body>
+
+</html>

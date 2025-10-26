@@ -1,0 +1,106 @@
+{
+  "intro_scene_1": {
+    "meta": { "typing": true, "trigger_signal": "start_scene_1", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "No necesitaba venir aquí, esas viejas me tienen encerrada." },
+      { "speaker": "Coatli", "text": "Mi padre seguro estaba delirando cuando me envió aquí… -suspira- Lo extraño mucho." },
+      { "speaker": "Coatli", "text": "Pero no hay más que hacer, este fue su último deseo. Debo obedecerlo." }
+    ]
+  },
+
+  "door_right_intro": {
+    "meta": { "typing": true, "trigger_signal": "door_right", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Iré. No tengpo de otra" }
+    ]
+  },
+
+  "start_scene_2": {
+    "meta": { "typing": true, "trigger_signal": "start_scene_2", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Maldición, esas brujas tramposas, no entiendo por qué mi padre me mandó aquí." },
+      { "speaker": "Coatli", "text": "Estaría mejor sola." },
+      { "speaker": "Coatli", "text": "No pienso pasar por el pueblo, me miran igual o tantito peor que esas viejas." },
+      { "speaker": "Coatli", "text": "Solo seguiré el camino hasta llegar." }
+    ]
+  },
+
+  "door_right_scene2": {
+    "meta": { "typing": true, "trigger_signal": "door_right_scene_2", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Tal vez pueda escapar del internado, regresar a esa horrible casota y robar las llaves de mi casa." }
+    ]
+  },
+
+  "start_scene_3": {
+    "meta": { "typing": true, "trigger_signal": "start_scene_3", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Este lugar es aún más grande que la casa de esas viejas…" },
+      { "speaker": "Coatli", "text": "Y es horrible." },
+      { "speaker": "Coatli", "text": "¿Cómo demonios voy a entrar? No pienso escalar la reja." },
+      { "speaker": "Coatli", "text": "Oh, parece que está abierta." }
+    ]
+  },
+
+  "scene3_slide2": {
+    "meta": { "typing": true, "trigger_signal": "scene3:slide2", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Ugh, vaya rechinido. Esto es… tétrico." },
+      { "speaker": "Coatli", "text": "¿Qué? ¿Nadie cierra las puertas por aquí?" }
+    ]
+  },
+
+  "scene3_slide3": {
+    "meta": { "typing": true, "trigger_signal": "scene3:slide3", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "¿Dónde están todos? ¿Qué, nadie cierra las puertas por aquí?" }
+    ]
+  },
+
+  "start_scene_4": {
+    "meta": { "typing": true, "trigger_signal": "start_scene_4", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "De verdad, ¿para qué ponen cruces por todos lados?" },
+      { "speaker": "Coatli", "text": "¿No se supone que así fue como murió su adorado profeta?" },
+      { "speaker": "Coatli", "text": "Me pregunto a dónde llevarán estas puertas…" }
+    ]
+  },
+
+  "door_right_scene4": {
+    "meta": { "typing": true, "trigger_signal": "door_right_scene_4", "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "Esta es… diferente." },
+      { "speaker": "Coatli", "text": "Mmh, me pregunto qué habrá dentro." }
+    ]
+  },
+
+  "scene4_intro_madre_hey": {
+    "meta": { "typing": true, "allow_repeat": false },
+    "lines": [
+      { "speaker": "Madre Superiora", "text": "¿Qué se supone que hace, señorita?" },
+      { "speaker": "Coatli", "text": "!Ay cabrón!." }
+    ]
+  },
+
+  "scene4_intro_madre_1": {
+    "meta": { "typing": true, "allow_repeat": false },
+    "lines": [
+      { "speaker": "Madre Superiora", "text": "-Jadeo- ¿Cómo te atreves a hablar así tan cerca de la casa de Dios?" },
+      { "speaker": "Madre Superiora", "text": "Ya me habían dicho tus tías que eras una malcriada adoradora del demonio." },
+      { "speaker": "Coatli", "text": "Señora, deje de decir cosas sin sentido-" },
+      { "speaker": "Madre Superiora", "text": "¡No me hables en ese tono!" },
+      { "speaker": "Madre Superiora", "text": "Además, será mejor que me empieces a mostrar respeto, soy la Madre Superiora." }
+    ]
+  },
+
+  "scene4_intro_madre_2": {
+    "meta": { "typing": true, "allow_repeat": false },
+    "lines": [
+      { "speaker": "Coatli", "text": "A mí no me importa si tiene hijos y se siente superior a los demás, señora." },
+      { "speaker": "Madre Superiora", "text": "¡Ignorante! Camina, ya es hora de que aprendas a comportarte." },
+      { "speaker": "Coatli", "text": "Ugh, suenas igual que mis tías." },
+      { "speaker": "Madre Superiora", "text": "Déjate de tonterías y avanza." },
+      { "speaker": "Coatli", "text": "Vaya carácter..." }
+    ]
+  }
+}

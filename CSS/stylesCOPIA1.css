@@ -1,0 +1,158 @@
+/*Estilo general - Inicio 1 ... ESTADO: PRUEBA*/
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: black;
+    font-family: Arial, sans-serif;
+  }
+
+  /*Diseño para video de fondo - Inicio 1*/
+  video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  /*Menú de Inicio 1*/
+  #menuInicio1 {
+    text-align: center;
+    color: white;
+    z-index: 1;
+  }
+
+  /*Botones de menú - Inicio 1*/
+  button {
+    display: block;
+    margin: 15px auto;
+    padding: 12px 30px;
+    font-size: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid white;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  /*Botones de menú - Efecto al pasar el mouse*/
+button:hover:not(.inactivo) {
+background: white;
+color: black;
+}
+
+button.inactivo {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/*Transición desvanecida negra*/
+#transicionInicio {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+/*Cinemática inicial del juego*/
+#cinematica1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 4;
+  display: none;
+}
+
+/*Botón Volver - Volver a pantalla de Inicio 1 */
+.boton-volver {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+/*INICIO 2: estilos mínimos */
+#menuInicio2{
+display:none;
+text-align:center; 
+z-index:1;
+}
+
+#menuInicio2 button {
+  display: inline-block;
+  margin: 12px 8px;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 2px solid white;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  cursor: pointer;
+}
+
+#menuInicio2 button:hover:not(.inactivo) {
+  background: white;
+  color: black;
+}
+
+/* Escenario */
+#escenario {
+display: none;
+position: relative;
+width: 100%;
+height: 100vh;
+background: url("../novela/img/Fondo-prueba.jpg") no-repeat left top;
+background-size: auto 100%;   /* Mantiene el alto fijo y el ancho original */
+overflow: hidden;
+z-index: 2;
+}
+
+/* Contenedor que fija la posición del personaje */
+#personaje-contenedor {
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 200px;
+height: 300px;
+}
+
+/* Imagen estática del personaje */
+#personaje {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: contain;
+z-index: 2;              /* encima del video */
+}
+
+/* Video de caminar */
+#personajeCamina {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: contain;
+display: none;           /* oculto hasta que camine */
+z-index: 3;
+}

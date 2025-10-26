@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego Multi-Escenas</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* quita scroll */
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background-size: cover;
+      background-position: center;
+    }
+    #mensaje {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 6px black;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="juego"></canvas>
+  <div id="mensaje">Presiona "E" para entrar</div>
+
+  <script>
+    const canvas = document.getElementById("juego");
+    const ctx = canvas.getContext("2d");
+
+    // Ajustar tamaño al de la ventana
+    function ajustarCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", ajustarCanvas);
+    ajustarCanvas();
+
+    // Escenarios
+    const escenarios = [
+      "img/Fondo-prueba3.jpg",
+      "img/Fondo-prueba4.jpg",
+      "img/Fondo-prueba5.jpg",
+      "img/Fondo-prueba6.jpg"
+    ];
+    let escenaActual = 0;
+
+    // Personaje
+    const personaje = {
+      x: 50,
+      y: 0,
+      ancho: 60,
+      alto: 100,
+      velocidad: 6
+    };
+
+    let teclas = {};
+    let puedeInteractuar = true; // evita múltiples cambios de escena con una sola pulsación
+    const rangoInteraccion = 70;
+    const mensaje = document.getElementById("mensaje");
+
+    // Eventos de teclado
+    document.addEventListener("keydown", (e) => teclas[e.key] = true);
+
+    document.addEventListener("keyup", (e) => {
+      teclas[e.key] = false;
+      if (e.key === "e") puedeInteractuar = true; // reactiva la interacción solo cuando se suelta la tecla
+    });
+
+    function actualizar() {
+      // Movimiento del personaje
+      if (teclas["a"]) personaje.x -= personaje.velocidad;
+      if (teclas["d"]) personaje.x += personaje.velocidad;
+
+      // Mantener dentro de los límites
+      if (personaje.x < 0) personaje.x = 0;
+      if (personaje.x + personaje.ancho > canvas.width)
+        personaje.x = canvas.width - personaje.ancho;
+
+      // Posiciones de puertas
+      const puertaIzq = 0;
+      const puertaDer = canvas.width - 80;
+
+      // Puerta izquierda (retrocede)
+      if (escenaActual > 0 && personaje.x < puertaIzq + rangoInteraccion) {
+        mensaje.style.display = "block";
+        if (teclas["e"] && puedeInteractuar) {
+          cambiarEscenario(-1);
+          puedeInteractuar = false;
+        }
+      }
+      // Puerta derecha (avanza)
+      else if (escenaActual < escenarios.length - 1 &&
+               personaje.x > puertaDer - rangoInteraccion) {
+        mensaje.style.display = "block";
+        if (teclas["e"] && puedeInteractuar) {
+          cambiarEscenario(1);
+          puedeInteractuar = false;
+        }
+      }
+      else {
+        mensaje.style.display = "none";
+      }
+    }
+
+    function dibujar() {
+      // Fondo
+      canvas.style.backgroundImage = `url('${escenarios[escenaActual]}')`;
+
+      // Personaje
+      ctx.fillStyle = "blue";
+      ctx.fillRect(personaje.x, canvas.height - personaje.alto - 30, personaje.ancho, personaje.alto);
+
+      // Puerta izquierda
+      if (escenaActual > 0) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, canvas.height - 130, 60, 100);
+      }
+
+      // Puerta derecha
+      if (escenaActual < escenarios.length - 1) {
+        ctx.fillStyle = "brown";
+        ctx.fillRect(canvas.width - 60, canvas.height - 130, 60, 100);
+      }
+    }
+
+    function bucle() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      actualizar();
+      dibujar();
+      requestAnimationFrame(bucle);
+    }
+
+    function cambiarEscenario(direccion) {
+      escenaActual += direccion;
+
+      // Reiniciar posición según la dirección
+      if (direccion === 1) {
+        personaje.x = 50; // empieza desde la izquierda al avanzar
+      } else {
+        personaje.x = canvas.width - personaje.ancho - 50; // empieza desde la derecha al retroceder
+      }
+    }
+
+    bucle();
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "scene_4": {
+    "acts": {
+      "intro_act_scene4": {
+        "key": "intro_act_scene4",
+        "meta": { "scene_slug": "scene_4", "trigger_signal": "door_right", "allow_repeat": false },
+        "steps": [
+          { "type": "dialog", "params": { "dialog_key": "scene4_intro_madre_hey" } },
+
+          { "type": "player_action", "params": { "action": "set_facing", "facing": "left", "animate": false } },
+
+          {
+            "type": "spawn_npc",
+            "params": {
+              "id": "madreSuperior",
+              "asset": "characters/madreSuperior-parada.jpg",
+              "walk_asset": "characters/madreSuperior-caminando.mp4",
+              "startSide": "left",
+              "startXPercent": -10,
+              "targetXPercent": 50,
+              "zIndex": 10005,
+              "width": "18%",
+              "entryAnimationMs": "auto",
+              "bottomPct": 6,
+              "maxWidth": "260px",
+              "staticFacing": "right",
+              "flipOnStart": true,
+              "speedMultiplier": 1.0
+            }
+          },
+
+          { "type": "wait", "params": { "ms": 120 } },
+
+          { "type": "dialog", "params": { "dialog_key": "scene4_intro_madre_1" } },
+          { "type": "dialog", "params": { "dialog_key": "scene4_intro_madre_2" } },
+
+          {
+            "type": "npc_action",
+            "params": {
+              "id": "madreSuperior",
+              "action": "exit",
+              "exitSide": "left",
+              "speedMultiplier": 1.0
+            }
+          },
+
+          { "type": "complete" }
+        ]
+      }
+    }
+  }
+}

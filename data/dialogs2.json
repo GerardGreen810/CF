@@ -1,0 +1,31 @@
+{
+  "intro_scene_1": {
+    "meta": { "typing": true, "trigger_signal": "start_scene_1" },
+    "lines": [
+      { "speaker": "Coatli", "text": "¿Qué es este lugar...? Parece un bosque encendido.", "sfxRole": "sfx_line_01" },
+      { "speaker": "??", "text": "No te preocupes. Todo estará bien.", "sfxPath": "sfx/whisper.mp3" },
+      { "speaker": "Coatli", "text": "—Respira— OK. Vamos.", "sfxRole": "sfx_line_02" }
+    ]
+  },
+
+  "door_right_intro": {
+    "meta": { "typing": true, "trigger_signal": "door_right" },
+    "lines": [
+      { "speaker": "Coatli", "text": "La puerta de la derecha está abierta..." },
+      { "speaker": "Narrador", "text": "Un susurro te invita a entrar." }
+    ]
+  },
+
+  "scene4_intro_madre_1": {
+    "meta": { "typing": true },
+    "lines": [
+      { "speaker": "Madre Superior", "text": "—¿Qué haces aquí? —pregunta con severidad." }
+    ]
+  },
+  "scene4_intro_madre_2": {
+    "meta": { "typing": true },
+    "lines": [
+      { "speaker": "Madre Superior", "text": "Ve, vuelve a tu sitio. No quiero problemas." }
+    ]
+  }
+}

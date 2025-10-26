@@ -1,0 +1,1024 @@
+/* ---------- Font-face (NewYork) ---------- */
+@font-face {
+  font-family: 'NewYork';
+  src: url('../fonts/newyork-webfont.woff2') format('woff2'),
+       url('../fonts/newyork-webfont.woff') format('woff'),
+       url('../fonts/NewYork.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Font-face (Faith Collapsing) ---------- */
+@font-face {
+  font-family: "Faith Collapsing";
+  src: url("../fonts/faith_collapsing-webfont.woff2") format("woff2"),
+       url("../fonts/faith_collapsing-webfont.woff") format("woff"),
+       url('../fonts/faith_collapsing.ttf') format('truetype');
+  font-weight: normal; /* si tienes varias grosores, ajusta */
+  font-style: normal;
+  font-display: swap; /* evita FOUT largo */
+}
+
+
+/* ---------------- Start Overlay (inicio) ---------------- */
+#startOverlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9500; /* el overlay queda por encima de casi todo */
+  opacity: 1;
+  transition: opacity 2000ms ease, visibility 2000ms ease;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* estado oculto (fade-out) */
+#startOverlay.start-overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden; /* se oculta tras la transición */
+  transition: opacity 2000ms ease, visibility 0s 2000ms;
+}
+
+/* contenido centrado */
+.start-overlay_content {
+  text-align: center;
+  pointer-events: none; /* el click lo captura el overlay */
+}
+
+/* prompt (texto estilo Faith Collapsing) */
+#startOverlayPrompt {
+  font-family: "NewYork", serif, Arial;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 2000ms cubic-bezier(.2,.8,.2,1), transform 2000ms cubic-bezier(.2,.8,.2,1);
+  will-change: opacity, transform;
+  user-select: none;
+  pointer-events: auto;
+}
+
+/* cuando el overlay tenga la clase visible, elevamos el prompt (fade in) */
+#startOverlay.start-overlay--visible #startOverlayPrompt {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ================= Loading overlay ================= */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;               /* mostrado por JS */
+  align-items: center;
+  justify-content: center;
+  z-index: 12000;              /* mayor que la UI de login/auth */
+  pointer-events: none;        /* evita bloqueo cuando hidden */
+  opacity: 0;
+  transition: opacity 220ms ease;
+  font-family: inherit;
+}
+
+.loading-overlay.show {
+  display: flex;
+  pointer-events: auto; /* bloquea clicks mientras se muestra */
+  opacity: 1;
+}
+
+/* Fondo negro semitransparente */
+.loading-overlay_backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);  /* poca opacidad, lo puedes ajustar */
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+/* Contenido centrado */
+.loading-overlay_content{
+  position: relative;
+  z-index: 12001;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  padding: 18px;
+  border-radius: 12px;
+  max-width: 80%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  transform: translateY(0);
+}
+
+/* GIF */
+#loadingOverlayGif{
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  display:block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Texto "Cargando", fuerte para que sea legible */
+.loading-text{
+  font-weight:700;
+  font-size:18px;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  text-align:center;
+  min-width: 6ch; /* evita que cambie el ancho cuando aparecen puntos */
+}
+
+/* pequeña animación de fade cuando aparece/desaparece */
+.loading-overlay.show .loading-overlay__content{
+  animation: overlayEntrance 260ms ease;
+}
+
+
+/* Ocultar el botón de sonido mientras el overlay esté activo */
+.overlay-active #btnSonido,
+.overlay-active .boton-sonido {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* --- Ajustes para que menuInicio1 quede POR ENCIMA de menuInicio2 mientras cargamos --- */
+/* menuInicio2 ya tiene z-index:50; ponemos menuInicio1 por encima pero mucho menor que el overlay (12000) */
+#menuInicio1 {
+  z-index: 150 !important; /* suficiente para quedar encima de #menuInicio2 (50) */
+}
+
+/* Cuando mostramos el loadingOverlay, queremos que el título NO aparezca por encima del overlay.
+   El overlay usa z-index:12000; aquí forzamos temporalmente que el título baje por debajo. */
+.loading-active #titulo {
+  z-index: 11999 !important;
+}
+
+.loading-active #menuInicio1 { opacity: 1; 
+}
+
+
+/* ---------- Dialog box styling ---------- */
+/* Dialog box: tamaño fijo para que la imagen de fondo no cambie */
+#dialogBox {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5px;
+  width: min(860px, 90%);    /* ancho máximo razonable */
+  height: 160px;            /* altura un poco mayor para dar espacio */
+  /* AUMENTÉ el padding lateral y el padding inferior para que haya más espacio para el hint */
+  padding: 22px 32px 54px;
+  background-image: url('../img/dialogues_bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #24180b;
+  border-radius: 12px;
+  /*box-shadow: 0 8px 30px rgba(0,0,0,0.6);*/
+  font-family: 'NewYork', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 22px; /* letra general del diálogo un poco más grande */
+  line-height: 1.4;
+  z-index: 30000;
+  display: none; /* lo controla JS */
+  overflow: hidden; /* evitar que crezca con el contenido */
+}
+
+/* Speaker ocupa una línea fija */
+#dialogBox #dialogSpeaker {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 20px; /* ligeramente más grande que antes */
+  height: 22px;
+  line-height: 22px;
+}
+
+/* Texto: espacio reservado dentro de la caja, con scroll si es muy largo */
+#dialogBox #dialogText {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 20px; /* un poco más grande */
+  max-height: calc(100% - 84px); /* ajustar para dejar espacio al hint absoluto */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px; /* pequeño respiro lateral */
+}
+
+/* Hint (E) al final: ocupando su línea */
+/* ahora es absoluto dentro del dialogBox y siempre estará abajo y centrado */
+#dialogBox #dialogHint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  font-size: 25px;
+  opacity: 0.95;
+  margin: 0;
+  text-align: center;
+  height: auto;
+  line-height: 18px;
+  width: calc(100% - 56px); /* que respete los paddings laterales */
+  pointer-events: none;
+  color: #24180b; /* mismo color del texto del diálogo */
+  background: transparent;
+  padding: 0;
+}
+
+
+
+/* === ESTILO GENERAL === */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: black;
+  font-family: 'NewYork', 'Arial', 'Sans serif';
+}
+
+/* estilo para botón de autenticación en esquina superior derecha */
+/* TODO lo relacionado a autenticación usa NewYork, sin brillo, blanco y simple */
+.auth-button,
+#authContainer button,
+#btnAuth {
+  font-family: 'NewYork', Arial, sans-serif;
+  color: #fff !important;
+  text-shadow: none !important;
+  background: none !important;
+  border: none !important;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Botón de sonido */
+/* ligeramente más grande como pediste */
+.boton-sonido {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 24px; /* aumentado */
+  cursor: pointer;
+  z-index: 9999; /* siempre visible */
+}
+
+
+/* === VIDEOS DE FONDO (solo videos de fondo/cinemática) === */
+#backgroundVideoInicio1,
+#cinematica1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+/* === MENÚ INICIO 1 === */
+#menuInicio1 {
+  text-align: center;
+  color: #2b1414;
+  z-index: 1;
+}
+
+#titulo {
+  position: fixed;               /* FIXED: fuera de cualquier stacking context padre */
+  top: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120000;               /* MUY por encima del overlay (startOverlay z-index:9500) */
+  opacity: 0;                    /* invisible hasta que JS añada .titulo--visible */
+  transition: opacity 2200ms cubic-bezier(.2,.8,.2,1) 100ms;
+  pointer-events: none;          /* no clickeable */
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+  /* tip: fuentes y estilo visual */
+  font-family: 'Faith Collapsing', 'NewYork', serif;
+  font-size: 100px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 12px #ffba5ad2;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* clase que JS añadirá para mostrar el título con fade-in */
+.titulo--visible {
+  opacity: 1 !important;
+}
+
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  display: block;
+  margin: 5px auto;
+  padding: 8px 12px;
+  font-size: 20px;            /* tamaño base para botones generales */
+  border-radius: 8px;
+  color: #fff;                /* texto blanco por defecto */
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: 'NewYork', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: none;
+  border: none;
+  text-shadow: none;          /* sin brillo por defecto */
+  box-shadow: none;
+}
+
+/* Botones de INICIO 1: SOLOS ellos usan Faith Collapsing + brillo */
+#menuInicio1 button {
+  font-family: "Faith Collapsing", 'NewYork', serif;
+  color: #2b1414 !important;
+  text-shadow: 0 0 8px #ffba5a5d; /* brillo específico para estos botones */
+  background: none;
+  border: none;
+  font-size: 55px; /* grande para el inicio */
+  transition: transform 0.2s ease;
+}
+
+/* Para que no afecte a otros menús (Inicio2/3) 
+#menuInicio2 button,
+#menuInicio3 button {
+  font-family: 'NewYork', Arial, sans-serif;
+}*/
+
+/* Hover: agrandado ligero SÓLO para botones de inicio 1 */
+#menuInicio1 button:hover {
+  transform: scale(1.07);
+}
+
+/* Botón inactivo */
+button.inactivo {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* === TRANSICIÓN DESVANECIDA === */
+#transicionInicio {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+
+/* === Confirmación Modal (Nueva Partida) === */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  display: none; /* JS controla esto */
+  align-items: center;
+  justify-content: center;
+  z-index: 11500; /* Alto, pero debajo de la pantalla de carga (12000) */
+  font-family: 'NewYork', Arial, sans-serif;
+}
+
+.confirm-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.confirm-modal-content {
+  position: relative;
+  z-index: 11501;
+  width: 420px;
+  max-width: 90%;
+  /* Usamos un fondo oscuro, similar al modal de login */
+  background: rgba(10, 5, 5, 0.92);
+  color: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  text-align: center;
+}
+
+.confirm-modal-title {
+  /* Usamos la fuente del título del juego */
+  font-family: "Faith Collapsing", 'NewYork', serif;
+  font-size: 32px;
+  color: #fff;
+  /* Damos el mismo brillo sutil que el título */
+  text-shadow: 0 0 8px #ffba5a5d;
+  margin: 0 0 12px 0;
+}
+
+.confirm-modal-text {
+  font-size: 18px;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin: 0 0 28px 0;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Estilo base para los botones del modal */
+.confirm-btn {
+  flex-basis: 120px; /* Ancho base */
+  padding: 10px 16px;
+  font-size: 16px;
+  font-family: 'NewYork', Arial, sans-serif;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.confirm-btn:hover {
+  transform: scale(1.03);
+}
+
+/* Botón "Cancelar" (secundario) */
+.confirm-btn--cancel {
+  background: transparent;
+  color: #fff;
+}
+.confirm-btn--cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Botón "Confirmar" (primario/peligro) */
+.confirm-btn--ok {
+  background: #9b2c2c; /* Un rojo oscuro */
+  color: #fff;
+  border-color: #9b2c2c;
+}
+.confirm-btn--ok:hover {
+  background: #c53030; /* Rojo más brillante */
+  border-color: #c53030;
+}
+
+
+/* === CINEMÁTICA INICIAL === */
+#cinematica1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 4;
+  display: none;
+}
+
+/* === Botón Skip Cinemática === */
+.skip-cinematic-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  /* Z-index: 10. 
+    Debe estar sobre la cinemática (z-index: 4) 
+    y sobre la transición de fade (z-index: 5), 
+    pero debajo de menús, etc. 
+  */
+  z-index: 10;
+  
+  /* Estilo del botón */
+  background: rgba(0, 0, 0, 0.3); /* Fondo oscuro sutil */
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 16px;
+  
+  /* Tipografía (coherente con tu UI) */
+  font-family: 'NewYork', Arial, sans-serif;
+  font-size: 16px;
+  text-shadow: none;
+  
+  /* Interacción */
+  cursor: pointer;
+  opacity: 0.7; /* Sutil por defecto */
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.skip-cinematic-btn:hover {
+  opacity: 1; /* Totalmente opaco al pasar el ratón */
+  background: rgba(0, 0, 0, 0.5);
+}
+
+
+/* Botón Volver */
+.btn-volver {
+  font-size: 30px;
+  position: fixed !important;
+  top: 12px !important;
+  left: 15px !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 21000 !important;   /* muy por encima de otros elementos */
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* === MENÚ INICIO 2 === */
+/* Inicio2: fondo como IMG + hojas encima (NO responsive, full-screen) */
+#menuInicio2 {
+  position: fixed;
+  inset: 0;
+  display: none; /* controlado por JS */
+  z-index: 50;
+  pointer-events: auto;
+}
+
+.inicio2-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Image background: ocupa todo el contenedor y se recorta si hace falta */
+#inicio2_bg_img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* CUBRE TODO (recorta si hace falta) */
+  z-index: 10;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none; /* para que no bloquee clicks en las hojas */
+}
+
+/* Hojas: encima del fondo */
+.inicio2-leaf {
+  position: absolute;
+  bottom: -10.5vh;
+  width: 705px; 
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 180ms ease, filter 200ms ease, opacity 180ms;
+  transform-origin: 50% 100%;
+  z-index: 20;
+  -webkit-user-drag: none;
+}
+
+/* TRANSICIÓN Y LAYER para hojas (Inicio 2) */
+.inicio2-leaf {
+  position: absolute;          /* ya lo tienes así */
+  bottom: -10.5vh;
+  width: 705px;
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 180ms ease, filter 200ms ease, opacity 180ms ease;
+  transform-origin: 50% 100%;
+  z-index: 20;
+  -webkit-user-drag: none;
+  /* Para que el overlay de hover (creado por JS) se posicione bien */
+  display: block;
+}
+
+/* overlay img creada por JS: ocupa la misma caja y se difumina */
+.inicio2-leaf-hover {
+  position: absolute;
+  inset: 0;                    /* top:0; left:0; right:0; bottom:0 */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  will-change: opacity;
+  z-index: 21;                 /* por encima de la imagen base */
+}
+
+/* clase aplicada en hover (por JS) para mostrar el overlay */
+.inicio2-leaf.is-hovered .inicio2-leaf-hover {
+  opacity: 1;
+}
+
+/* ligero efecto de elevación opcional al hacer hover sobre la hoja */
+.inicio2-leaf:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* Ajusta separación/posición para las hojas más grandes */
+#inicio2_leaf1 { left: 23%; transform: translateX(-50%); }
+#inicio2_leaf2 { left: 52%; transform: translateX(-50%); }
+#inicio2_leaf3 { left: 79.5%; transform: translateX(-50%); }
+
+/*EFECTOS DE HOVER*/ 
+/*.inicio2-leaf:hover {
+  transform: translateY(-8px) scale(1.03) rotate(0deg);
+  filter: drop-shadow(0 12px 28px #ffe46973);
+}*/
+
+
+/* Clase para desactivar una hoja */
+.inicio2-leaf.disabled {
+  opacity: 0.38;
+  pointer-events: none;
+  filter: grayscale(80%);
+}
+
+/* Overlay decorativo encima de las hojas (no interfiere con clicks) */
+#inicio2_overlay {
+  position: absolute;
+  inset: 0;                     /* ocupa todo el contenedor */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* cubre y recorta si hace falta */
+  z-index: 90;                  /* por encima de las hojas (las hojas estaban en z-index:20) */
+  pointer-events: none;         /* NO bloquea interacción con las hojas */
+  opacity: 1;                   /* visible por defecto; puedes usar 0 para ocultarlo */
+  transition: opacity 300ms ease; /* si quieres fade-in/out */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+/* === MENU INICIO 3 (EPISODIOS) === */
+#menuInicio3 {
+  position: fixed;
+  inset: 0;
+  display: none; /* lo controla JS */
+  z-index: 60;
+  pointer-events: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botones de episodios: mantienen estilo similar a tus botones globales pero en fila */
+.episodio-btn {
+  padding: 14px 22px;
+  font-size: 18px;
+  
+  border: 2px solid white;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: transform 160ms ease, background 200ms;
+  min-width: 180px;
+  max-width: 260px;
+  white-space: nowrap;
+  font-family: 'NewYork', serif; /* no Faith Collapsing */
+}
+
+/* Hover para episodios (consistente con tus otros botones) */
+.episodio-btn:hover:not(.inactivo) {
+  background: white;
+  color: black;
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* Si quieres centrar verticalmente los botones cuando el viewport es estrecho */
+@media (max-width: 700px) {
+  #episodios_panel {
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 10vh;
+  }
+  .episodio-btn {
+    min-width: 60%;
+  }
+}
+
+
+/* Loading screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 150000; /* muy por encima */
+  opacity: 1;
+  transition: opacity 1600ms cubic-bezier(.2,.8,.2,1);
+  pointer-events: auto;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 1600ms cubic-bezier(.2,.8,.2,1), visibility 0s 1600ms;
+}
+
+#loadingVideo {
+  width: min(1100px, 92%);
+  max-height: 78vh;
+  object-fit: contain;
+  display: block;
+  /* si quieres que tenga un leve brillo o marco, añádelo aquí */
+  border-radius: 6px;
+  background: transparent;
+}
+
+
+
+/* === ESCENARIO DEL JUEGO === */
+#escenario {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url("../img/escena1.png") no-repeat left top;
+  background-size: auto 100%; /* altura fija, ancho original */
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* ===== Estilos para el botón guardar (imagen colocada en HTML) ===== */
+#btnGuardarPartida {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 62px;            /* tamaño base, ajusta si quieres más grande/pequeño */
+  height: auto;
+  cursor: pointer;
+  z-index: 120000;        /* por encima de casi todo */
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 140ms ease, opacity 140ms ease;
+  opacity: 1;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45));
+}
+
+/* Contenedor del personaje: un poco más arriba (no pegado al fondo) */
+#personaje-contenedor {
+  position: absolute;
+  bottom: 70px;               /* antes: 0 -> ahora queda un poco arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 345px;
+  height: 445px;
+  pointer-events: none;       /* evita que el contenedor bloquee clicks (opcional) */
+  user-select: none;
+  z-index: 6;                 /* asegúrate que esté sobre el fondo */
+}
+
+/* Imagen estática del personaje */
+#personaje {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+}
+
+/* Video de caminar */
+#personajeCamina {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: none;
+  z-index: 3;
+}
+
+/* NPCs para actsManager */
+#npcContainer { 
+  position: absolute; 
+  inset: 0; 
+  pointer-events: 
+  none; z-index: 10010; 
+}
+
+.npc { 
+  position: absolute; 
+  bottom: 8%; 
+  transform: translateX(-50%); 
+  width: 12%; max-width: 160px; 
+  pointer-events: none; 
+  opacity: 0; 
+}
+
+.npc img { 
+  display: block; 
+  width: 100%; 
+  height: auto; 
+  user-select: none;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none; 
+}
+
+/* NPC media: asegurar que imagen y video ocupen la altura del wrapper y se alineen a la base */
+.npc-inner {
+  display: flex;
+  align-items: flex-end;   /* alinear por la base (bottom) */
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.npc video {
+  display: block;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* pequeños tweaks para entrada/salida (se usan transitions inline en JS) */
+.npc--hidden { 
+  opacity: 0; 
+}
+
+
+/* Mensaje de interacción (se posicionará sobre el personaje via JS) */
+/* Mensajes E (no diálogo): Faith Collapsing, sin brillo y un poco más grandes */
+#mensajeE {
+  font-family: 'NewYork', Arial, serif;
+  position: fixed;            /* lo posicionaremos respecto al viewport con JS */
+  transform: translateX(-50%);/* centrar horizontalmente por su punto medio */
+  font-size: 24px;           /* un poco más grande */
+  font-weight: bold;
+  color: #fff;
+  text-shadow: none;         /* sin brillo */
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: none;              /* se mostrará desde JS solo cuando toque */
+  z-index: 9998;              /* por encima del escenario pero debajo del overlay si hay */
+  white-space: nowrap;
+  pointer-events: none;       /* no bloquea eventos del juego */
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Mensaje exclusivo para slides: centrado inferior */
+#mensajeE_slides {
+  font-family: "Faith Collapsing", 'NewYork', serif;
+  position: fixed;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  z-index: 10000;            /* por encima del escenario */
+  font-size: 24px;          /* un poco más grande */
+  font-weight: 700;
+  color: #fff;
+  text-shadow: none;        /* sin brillo */
+  padding: 8px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  display: none;             /* se mostrará via JS */
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Mensajes con “E” (interacción y slides) */
+/* Mensajes con “E” (interacción y slides) - arreglado */
+#mensajeE,
+#mensajeE_slides {
+  font-family: "Faith Collapsing", "NewYork", sans-serif;
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  text-shadow: none;
+  padding: 6px 10px;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+
+#dialogBox button,
+.dialogo button,
+#dialogBox .dialog-button,
+.dialogo .dialog-button {
+  font-family: 'NewYork', Arial, sans-serif;
+  background: none;
+  color: #24180b;
+  border: none;
+  text-shadow: none;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+
+
+/* ===== OVERRIDES FUERTES: arreglos de mensajeE, diálogo y precedencia ===== */
+
+/* Asegura box-sizing para que paddings funcionen como esperamos */
+#dialogBox, #dialogBox * {
+  box-sizing: border-box !important;
+}
+
+/* Mensajes E (interacción, NO diálogo): Faith Collapsing, sin brillo, más grandes */
+#mensajeE,
+#mensajeE_slides {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #fff !important;
+  text-shadow: none !important;
+  font-family: "NewYork", Arial, sans-serif !important;
+  font-size: 24px !important; /* ajusta si quieres más/menos */
+  font-weight: 700 !important;
+  padding: 6px 12px !important;
+  pointer-events: none !important;
+}
+
+/* Evitar pseudo-elementos que pinten paneles */
+#mensajeE::before,
+#mensajeE::after,
+#mensajeE_slides::before,
+#mensajeE_slides::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+}
+
+/* DIALOG BOX: más espacio lateral y texto más grande */
+#dialogBox {
+  padding: 20px 30px 60px !important; /* más espacio lateral y espacio inferior para el hint */
+  font-size: 22px !important;         /* tamaño base para todo el diálogo */
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+  overflow-y: hidden;
+}
+
+/* Texto dentro del diálogo: padding lateral real y tamaño */
+#dialogBox #dialogText {
+  padding: 4px 18px 8px 18px !important; /* espacio a los lados */
+  font-size: 20px !important;
+  max-height: calc(100% - 84px) !important;
+  overflow-y: auto !important;
+}
+
+/* Hint (E) del diálogo: fuerza centrado y abajo */
+#dialogBox #dialogHint {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 12px !important;
+  transform: translateX(-50%) !important;
+  width: calc(100% - 72px) !important; /* respeta paddings */
+  text-align: center !important;
+  font-size: 17px !important;
+  color: #24180b !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+/* Si el problema fue que un padre tiene overlay semitransparente, puedes probar:
+   (observa que esto ocultará overlays que estén en el mismo contenedor)
+*/
+#menuInicio1,
+#menuInicio2,
+#menuInicio3,
+#dialogBox,
+#mensajeE,
+#mensajeE_slides {
+  background-clip: padding-box !important;
+}
+
+#dialogBox #dialogText {
+  -ms-overflow-style: none;       /* IE 10+ */
+  scrollbar-width: none;          /* Firefox */
+}
+
+/* Webkit (Chrome, Edge, Safari) */
+#dialogBox #dialogText::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+display: none !important;
+}

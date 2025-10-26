@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coathli's Faith</title>
+  
+  <!-- Enlace a los estilos -->
+  <link rel="stylesheet" href="../CSS/styles.css">
+
+  <!-- Biblioteca para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- === INICIO DE SESIÓN: esquina superior derecha === -->
+  <div id="authContainer" style="position: fixed; top: 12px; right: 12px; z-index:10000; font-family: Arial, sans-serif;">
+    <button id="btnAuth" style="padding:8px 12px; font-size:14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; border-radius: 8px; cursor:pointer;">
+      <span id="authLabel">Iniciar sesión / Registrar</span>
+    </button>
+  </div>
+
+  <!-- === Modal simple para Login / Registro (oculto por defecto) === -->
+  <div id="authModal" style="display:none; position:fixed; inset:0; z-index:11000; align-items:center; justify-content:center; background: rgba(0,0,0,0.6);">
+    <div id="authCard" style="width:360px; max-width:90%; background: rgba(0,0,0,0.85); color:white; padding:18px; border-radius:10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong id="authTitle">Iniciar sesión</strong>
+        <button id="closeAuth" style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;">✕</button>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex; gap:8px; margin-bottom:12px;">
+        <button id="tabLogin" style="flex:1; padding:8px; cursor:pointer;">Login</button>
+        <button id="tabRegister" style="flex:1; padding:8px; cursor:pointer;">Registro</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <input id="login_username" placeholder="Usuario" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #444;" />
+        <input id="login_password" type="password" placeholder="Contraseña" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #444;" />
+        <button id="btnLoginModal" style="width:100%; padding:10px; margin-bottom:6px;">Entrar</button>
+        <div id="loginMsg" style="min-height:18px; font-size:13px;"></div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none;">
+        <input id="reg_username" placeholder="Usuario (mín 3)" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #444;" />
+        <input id="reg_password" type="password" placeholder="Contraseña" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #444;" />
+        <input id="reg_password_confirm" type="password" placeholder="Confirmar contraseña" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #444;" />
+        <button id="btnRegisterModal" style="width:100%; padding:10px; margin-bottom:6px;">Registrar</button>
+        <div id="regMsg" style="min-height:18px; font-size:13px;"></div>
+      </div>
+
+      <!-- Logout (se muestra solo si hay sesión) -->
+      <div id="loggedActions" style="display:none; margin-top:8px;">
+        <div style="margin-bottom:8px;">Conectado como <strong id="loggedUser"></strong></div>
+        <button id="btnLogoutModal" style="width:100%; padding:10px;">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Icono de volumen - controla el volumen de TODO el juego -->
+  <button id="btnSonido" class="boton-sonido">
+    <i id="iconoSonido" class="fas fa-volume-mute"></i>
+  </button>
+
+  <audio id="pasosSFX" src="../sfx/PasosSFX25.mp3" preload="auto"></audio>
+
+  <!-- Música de inicio -->
+  <audio id="musicaInicio" loop muted>
+    <source src="../musica/Tema_Inicio.mp3" type="audio/mp3">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <!-- Video pre-reposo - Fondo de la pantalla de inicio -->
+  <video id="backgroundVideoInicio1" autoplay muted loop>
+    <source src="../videos/candles-on-loop.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+
+  <button id="btnSkipCinematica" class="skip-cinematic-btn" style="display:none;">
+    Saltar &raquo;
+  </button>
+
+
+  <!-- Transición simple con pantalla negra desvanecida -->
+  <div id="transicionInicio"></div>
+  
+
+  <!-- Menú de Inicio 1 -->
+  <div id="menuInicio1">
+    <h1 id="titulo">Coatli's Faith</h1>
+
+    <div class="menu-buttons">
+      <button onclick="jugar()">Jugar</button>
+      <button onclick="creditos()">Creditos</button>
+    </div>
+  </div>
+
+  <!-- START OVERLAY: aparece al inicio y desbloquea audio al click / tecla E -->
+  <div id="startOverlay" class="start-overlay">
+    <div id="startOverlayContent" class="start-overlay_content">
+      <div id="startOverlayPrompt" class="start-overlay_prompt">Presiona "E" o haz click para continuar</div>
+    </div>
+  </div>
+
+  <!-- Loading overlay: muestra WebP animado + texto -->
+  <div id="loadingOverlay" class="loading-overlay" aria-hidden="true" role="dialog" aria-label="Pantalla de carga">
+    <div class="loading-overlay_backdrop" aria-hidden="true"></div>
+
+    <div class="loading-overlay_content" role="status" aria-live="polite">
+      <!-- usa WebP animado -->
+      <img id="loadingOverlayGif" src="../img/loadingOverlay.webp" alt="Animación de carga" />
+
+      <div id="loadingOverlayText" class="loading-text">Cargando</div>
+    </div>
+  </div>
+
+
+<!-- Menú de Inicio 2 (ahora con imágenes hojas) -->
+  <div id="menuInicio2" style="display:none; text-align:center; z-index:1;">
+    <!-- bg como IMG para evitar problemas de background-image -->
+    <div id="inicio2_container" class="inicio2-container">
+      <img id="inicio2_bg_img" src="../img/inicio2_bg.png" alt="Inicio 2 Fondo" />
+
+      <!-- hojas: cada una es un <img> con data-src para normal y hover -->
+      <img id="inicio2_leaf1" class="inicio2-leaf" 
+          src="../img/inicio2_op1.png" 
+          data-normal="../img/inicio2_op1.png" 
+          data-hover="../img/inicio2_op1_on.png"
+          alt="Continuar"/>
+      <img id="inicio2_leaf2" class="inicio2-leaf" 
+          src="../img/inicio2_op2.png" 
+          data-normal="../img/inicio2_op2.png" 
+          data-hover="../img/inicio2_op2_on.png"
+          alt="Nueva partida"/>
+      <img id="inicio2_leaf3" class="inicio2-leaf" 
+          src="../img/inicio2_op3.png" 
+          data-normal="../img/inicio2_op3.png" 
+          data-hover="../img/inicio2_op3_on.png"
+          alt="Episodios"/>
+
+        <!-- OVERLAY: imagen decorativa por encima de las hojas (no bloquea clicks) -->
+      <img id="inicio2_overlay" src="../img/inicio2_overlay.png" alt="Overlay decorativo" />
+    </div>
+  </div>
+
+
+  <div id="confirmNuevaPartidaModal" class="confirm-modal" style="display:none;">
+    <div class="confirm-modal-backdrop"></div>
+    <div class="confirm-modal-content">
+      <h3 class="confirm-modal-title">¿Iniciar Nueva Partida?</h3>
+      <p class="confirm-modal-text">Tu progreso anterior se borrará permanentemente.</p>
+      <div class="confirm-modal-actions">
+        <button id="btnConfirmNuevaPartida_Cancel" class="confirm-btn confirm-btn--cancel">Cancelar</button>
+        <button id="btnConfirmNuevaPartida_OK" class="confirm-btn confirm-btn--ok">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- === MENÚ INICIO 3: EPISODIOS (oculto por defecto) === -->
+  <div id="menuInicio3" style="display:none; position:fixed; inset:0; z-index:60; align-items:center; justify-content:center;">
+    <!-- Fondo (usa una imagen si la tienes; si no, se verá un panel oscuro) -->
+    <img id="menuInicio3_bg" src="../img/inicio3PRUEBA.jpeg" alt="Episodios fondo"
+         style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:61; user-select:none; -webkit-user-drag:none;" />
+
+    <!-- Panel central con botones -->
+    <div id="episodios_panel" style="position:relative; z-index:70; width:90%; max-width:1100px; margin:auto; display:flex; gap:18px; justify-content:center; align-items:center; height:100vh; pointer-events:auto;">
+      <button class="episodio-btn" id="episodio1">Episodio 1</button>
+      <button class="episodio-btn" id="episodio2">Episodio 2</button>
+      <button class="episodio-btn" id="episodio3">Episodio 3</button>
+
+      <!-- <button class="episodio-btn" id="episodio4">Episodio 4 (comentario)</button> -->
+      <!-- <button class="episodio-btn" id="episodio5">Episodio 5 (comentario)</button> -->
+    </div>
+
+    <!-- Botón volver / cerrar -->
+    <button id="btnCerrarEpisodios" class="btn-volver">Volver</button>
+  </div>
+
+  <!-- Botón Salir en esquina (visible en Inicio 2) -->
+  <button id="btnSalirEsquina" class="btn-volver" style="display:none">Volver</button>
+
+
+  <!-- Loading screen (video) -->
+  <div id="loadingScreen" class="loading-screen" aria-hidden="true" style="display:none;">
+    <video id="loadingVideo" playsinline preload="auto" loop muted>
+      <source src="../videos/pruebas/candles-on-loop.mp4" type="video/mp4">
+      Tu navegador no soporta video.
+    </video>
+  </div>
+
+  <!-- Cinemática de inicio -->
+  <video id="cinematica1">
+    <source src="../videos/cinematica-inicio.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+
+  <!-- Escenario del juego -->
+  <div id="escenario" style="display:none;">
+    <div id="personaje-contenedor">
+      <img id="personaje" src="../img/coatli-parada.png" alt="Personaje">
+      <video id="personajeCamina" loop muted>
+        <source src="../videos/coatli-caminando.mp4">
+      </video>
+    </div>
+    <!-- Mensaje de interacción -->
+    <div id="mensajeE">Presiona "E"</div>
+
+    <!-- Mensaje de interacción exclusivo para SLIDES -->
+    <div id="mensajeE_slides" style="display:none;">Continuar "E"</div>
+
+    <!-- DIALOG BOX: creado/gestionado por dialogManager.js -->
+    <div id="dialogBox" class="dialogo" style="display:none;">
+      <div id="dialogSpeaker" style="font-weight:700; margin-bottom:6px;"></div>
+      <div id="dialogText" style="white-space:pre-wrap; word-break:break-word; min-height:36px;"></div>
+      <div id="dialogHint" style="font-size:12px; opacity:0.85; margin-top:8px; text-align:right;">Presiona "E" para continuar</div>
+    </div>
+  </div>
+
+  <!-- Botón imagen para guardar partida (colocado en HTML como pediste) -->
+  <img id="btnGuardarPartida" src="../img/collarGuardado.png" alt="Guardar partida" />
+
+
+  <!-- Script principal -->
+  <script src="../JAVASCRIPT/dialogManager.js"></script>
+  <script src="../JAVASCRIPT/actsManager.js"></script>
+  <script src="../JAVASCRIPT/assets_loader.js"></script>
+  <script src="../JAVASCRIPT/auth.js"></script>
+
+  <script src="../JAVASCRIPT/script.js"></script>
+
+  <script src="../JAVASCRIPT/saveManager.js"></script>
+
+</body>
+</html>
