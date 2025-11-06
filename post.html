@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="post-title">Artículo — Coathli's Faith</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header compact">
+    <a href="index.html" class="brand-link">← Volver</a>
+    <h1>Coathli's Faith</h1>
+  </header>
+
+  <main class="post-container">
+    <article class="post">
+      <h2 id="title"></h2>
+      <div class="meta">
+        <span id="date"></span> • <span id="category"></span>
+      </div>
+      <img id="cover" alt="Imagen del artículo" class="post-cover"/>
+      <div id="content" class="content"></div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>© 2025 Coathli's Faith</small>
+  </footer>
+
+  <script>
+    async function loadPost() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('p');
+      const res = await fetch('data/posts.json');
+      const posts = await res.json();
+      const post = posts.find(x => x.slug === slug);
+      if (!post) {
+        document.getElementById('title').textContent = 'Artículo no encontrado';
+        return;
+      }
+      document.getElementById('post-title').textContent = post.title + ' — Coathli\'s Faith';
+      document.getElementById('title').textContent = post.title;
+      document.getElementById('date').textContent = post.date;
+      document.getElementById('category').textContent = post.category;
+      const cover = document.getElementById('cover');
+      cover.src = post.cover;
+      cover.style.display = post.cover ? 'block' : 'none';
+      document.getElementById('content').innerHTML = post.html;
+    }
+    loadPost();
+  </script>
+</body>
+</html>
